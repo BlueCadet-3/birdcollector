@@ -3,11 +3,11 @@ from django.http import HttpResponse
 
 # Add temporary fake data
 class Bird:
-  def __init__(self, name, kingdom, phylum, class, order, family, genus, species):
+  def __init__(self, name, kingdom, phylum, classrank, order, family, genus, species):
     self.name = name
     self.kingdom = kingdom
     self.phylum = phylum
-    self.class = class
+    self.classrank = classrank
     self.order = order
     self.family = family
     self.genus = genus
