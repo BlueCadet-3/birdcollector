@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 
 MEALS = (
   ('B', 'Breakfast'),
@@ -7,29 +8,15 @@ MEALS = (
   ('D', 'Dinner')
 )
 
-CONTINENTS = (
-  ('AF', 'Africa'),
-  ('ANT', 'Antarctica'),
-  ('AS', 'Asia'),
-  ('AUS', 'Australia'),
-  ('EU', 'Europe'),
-  ('NA', 'North America'),
-  ('SA', 'South America'),
-)
-
 # Create your models here.
 
 class Location(models.Model):
   state = models.CharField(max_length=50)
   country = models.CharField(max_length=50)
-  continent = models.CharField(
-    max_length=3,
-    choices = CONTINENTS,
-    default = CONTINENTS[0][0]
-  )
+  continent = models.CharField(max_length=50)
 
   def __str__(self):
-    return self.name
+    return f"{self.state}, {self.country}, {self.continent}"
   
   def get_absolute_url(self):
     return reverse('locations_detail', kwargs={'pk': self.id})
@@ -43,13 +30,16 @@ class Bird(models.Model):
   family = models.CharField(max_length=50)
   genus = models.CharField(max_length=50)
   species = models.CharField(max_length=50)
-  locations = models.ManyToManyField(Location)
+  locations = models.ManyToManyField(Location, blank=True)
 
   def __str__(self):
     return self.name
 
   def get_absolute_url(self):
     return reverse('detail', kwargs={'bird_id': self.id})
+  
+  def fed_for_today(self):
+    return self.feeding_set.filter(date=date.today()).count() >= len(MEALS)
 
 class Feeding(models.Model):
   date = models.DateField('Feeding Date')
@@ -60,6 +50,9 @@ class Feeding(models.Model):
   )
   bird = models.ForeignKey(Bird, on_delete = models.CASCADE)
 
+  class Meta:
+    ordering = ['-date']
+
   def __str__(self):
     return f"{self.get_meal_display()} on {self.date}"
-    
+  
