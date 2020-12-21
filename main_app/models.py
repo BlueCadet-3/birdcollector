@@ -7,7 +7,33 @@ MEALS = (
   ('D', 'Dinner')
 )
 
+CONTINENTS = (
+  ('AF', 'Africa'),
+  ('ANT', 'Antarctica'),
+  ('AS', 'Asia'),
+  ('AUS', 'Australia'),
+  ('EU', 'Europe'),
+  ('NA', 'North America'),
+  ('SA', 'South America'),
+)
+
 # Create your models here.
+
+class Location(models.Model):
+  state = models.CharField(max_length=50)
+  country = models.CharField(max_length=50)
+  continent = models.CharField(
+    max_length=3,
+    choices = CONTINENTS,
+    default = CONTINENTS[0][0]
+  )
+
+  def __str__(self):
+    return self.name
+  
+  def get_absolute_url(self):
+    return reverse('locations_detail', kwargs={'pk': self.id})
+
 class Bird(models.Model):
   name = models.CharField(max_length=50)
   kingdom = models.CharField(max_length=50)
@@ -17,6 +43,7 @@ class Bird(models.Model):
   family = models.CharField(max_length=50)
   genus = models.CharField(max_length=50)
   species = models.CharField(max_length=50)
+  locations = models.ManyToManyField(Location)
 
   def __str__(self):
     return self.name
