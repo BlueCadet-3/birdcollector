@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Bird
+from django.views.generic import ListView, DetailView
+from .models import Bird, Location
 
 # Create your views here.
 def home(request):
@@ -17,7 +18,7 @@ def birds_detail(request, bird_id):
   bird = Bird.objects.get(id=bird_id)
   return render(request, 'birds/detail.html', { 'bird': bird })
 
-def assoc_toy(request, bird_id, location_id):
+def assoc_location(request, bird_id, location_id):
   # Note that you can pass a toy's id instead of the whole object
   Bird.objects.get(id=bird_id).locations.add(location_id)
   return redirect('detail', bird_id=bird_id)
