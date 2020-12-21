@@ -11,9 +11,9 @@ MEALS = (
 # Create your models here.
 
 class Location(models.Model):
-  state = models.CharField(max_length=50)
-  country = models.CharField(max_length=50)
-  continent = models.CharField(max_length=50)
+  state = models.CharField(max_length=50, default="Illinois")
+  country = models.CharField(max_length=50, default="USA")
+  continent = models.CharField(max_length=50, default="North America")
 
   def __str__(self):
     return f"{self.state}, {self.country}, {self.continent}"

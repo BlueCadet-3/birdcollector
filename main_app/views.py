@@ -32,7 +32,7 @@ def birds_index(request):
 def birds_detail(request, bird_id):
   bird = Bird.objects.get(id=bird_id)
     # Get the toys the cat doesn't have
-  locations_bird_doesnt_have = Bird.objects.exclude(id__in = bird.locations.all().values_list('id'))
+  locations_bird_doesnt_have = Location.objects.exclude(id__in = bird.locations.all().values_list('id'))
   # instantiate FeedingForm to be rendered in the template
   feeding_form = FeedingForm()
   return render(request, 'birds/detail.html', {
@@ -66,11 +66,6 @@ def add_location(request, bird_id):
     new_location.save()
   return redirect('detail', bird_id=bird_id)
 
-def assoc_location(request, bird_id, location_id):
-  # Note that you can pass a toy's id instead of the whole object
-  Bird.objects.get(id=bird_id).locations.add(location_id)
-  return redirect('detail', bird_id=bird_id)
-
 class LocationList(ListView):
   model = Location
 
@@ -88,3 +83,8 @@ class LocationUpdate(UpdateView):
 class LocationDelete(DeleteView):
   model = Location
   success_url = '/locations/'
+
+def assoc_location(request, bird_id, location_id):
+  # Note that you can pass a toy's id instead of the whole object
+  Bird.objects.get(id=bird_id).locations.add(location_id)
+  return redirect('detail', bird_id=bird_id)
